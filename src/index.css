@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primaryGreen: #1B4D3E;
+  --color-secondaryBlue: #0057B7;
+}
+
+:root {
+  --primary: #1B4D3E;
+  --secondary: #0057B7;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
