@@ -19,6 +19,7 @@ import {
 import { collection, onSnapshot } from 'firebase/firestore';
 import MosquesManager from './MosquesManager';
 import TripsManager from './TripsManager';
+import UsersManager from './UsersManager';
 
 // --- Components ---
 
@@ -109,10 +110,10 @@ const DashboardHome = () => {
           <h1 className="text-3xl font-bold">Vue d'ensemble du tableau de bord</h1>
           <p className="text-slate-500">Bon retour, Administrateur</p>
         </div>
-        <button className="bg-primaryGreen text-white px-6 py-3 rounded-xl font-bold hover:bg-opacity-90 transition-all flex items-center gap-2">
+        {/* <button className="bg-primaryGreen text-white px-6 py-3 rounded-xl font-bold hover:bg-opacity-90 transition-all flex items-center gap-2">
           <Plus size={20} />
           Ajouter une mosquée
-        </button>
+        </button> */}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -131,7 +132,7 @@ const DashboardHome = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
           <h2 className="text-xl font-bold mb-6">Trajets récents</h2>
           <div className="space-y-4">
@@ -167,7 +168,7 @@ const DashboardHome = () => {
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -267,7 +268,7 @@ export default function App() {
                 <Route path="/" element={<DashboardHome />} />
                 <Route path="/mosques" element={<MosquesManager />} />
                 <Route path="/trips" element={<TripsManager />} />
-                <Route path="/users" element={<div className="font-bold text-3xl">User Management Coming Soon</div>} />
+                <Route path="/users" element={<UsersManager />} />
               </Routes>
             </MainLayout>
           ) : (
