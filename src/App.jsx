@@ -21,12 +21,14 @@ import {
   Users,
   LogOut,
   ChevronRight,
-  TrendingUp
+  TrendingUp,
+  AlertTriangle
 } from 'lucide-react';
 
 import MosquesManager from './MosquesManager';
 import TripsManager from './TripsManager';
 import UsersManager from './UsersManager';
+import ReportsManager from './ReportsManager';
 
 
 // -------------------- LOGIN --------------------
@@ -223,7 +225,8 @@ const MainLayout = ({ children, user }) => {
     { label: "Vue d'ensemble", icon: <BarChart3 size={20} />, path: '/' },
     { label: 'Mosquées', icon: <MapPin size={20} />, path: '/mosques' },
     { label: 'Trajets', icon: <Car size={20} />, path: '/trips' },
-    { label: 'Utilisateurs', icon: <Users size={20} />, path: '/users' }
+    { label: 'Utilisateurs', icon: <Users size={20} />, path: '/users' },
+    { label: 'Signalements', icon: <AlertTriangle size={20} />, path: '/reports' }
   ];
 
   return (
@@ -336,6 +339,7 @@ export default function App() {
                 <Route path="/mosques" element={<MosquesManager userDetails={userDetails} />} />
                 <Route path="/trips" element={<TripsManager userDetails={userDetails} />} />
                 <Route path="/users" element={<UsersManager userDetails={userDetails} />} />
+                <Route path="/reports" element={<ReportsManager userDetails={userDetails} />} />
               </Routes>
             </MainLayout>
           ) : (
