@@ -3,16 +3,20 @@ import { db } from './firebase';
 import { collection, onSnapshot, deleteDoc, doc, query, orderBy } from 'firebase/firestore';
 import { Car, Trash2, Calendar, MapPin, User, Users } from 'lucide-react';
 
-const TripsManager = () => {
+const TripsManager = ({ userDetails }) => {
     const [trips, setTrips] = useState([]);
 
     useEffect(() => {
         const q = query(collection(db, 'trips'), orderBy('createdAt', 'desc'));
         const unsubscribe = onSnapshot(q, (snapshot) => {
-            setTrips(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+            let docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            if (userDetails?.role === 'mosque_admin' && userDetails?.mosqueId) {
+                docs = docs.filter(t => t.mosqueId === userDetails.mosqueId);
+            }
+            setTrips(docs);
         });
         return unsubscribe;
-    }, []);
+    }, [userDetails]);
 
     const handleDelete = async (id) => {
         if (window.confirm('Êtes-vous sûr de vouloir supprimer cet enregistrement de trajet ? Cette action est irréversible.')) {

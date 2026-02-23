@@ -3,7 +3,7 @@ import { db } from './firebase';
 import { collection, onSnapshot, addDoc, deleteDoc, doc, updateDoc, query, orderBy } from 'firebase/firestore';
 import { Plus, Trash2, Edit2, MapPin, X, Save } from 'lucide-react';
 
-const MosquesManager = () => {
+const MosquesManager = ({ userDetails }) => {
     const [mosques, setMosques] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingId, setEditingId] = useState(null);
@@ -13,10 +13,14 @@ const MosquesManager = () => {
     useEffect(() => {
         const q = query(collection(db, 'mosques'), orderBy('name'));
         const unsubscribe = onSnapshot(q, (snapshot) => {
-            setMosques(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+            let docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            if (userDetails?.role === 'mosque_admin' && userDetails?.mosqueId) {
+                docs = docs.filter(m => m.id === userDetails.mosqueId);
+            }
+            setMosques(docs);
         });
         return unsubscribe;
-    }, []);
+    }, [userDetails]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -64,13 +68,15 @@ const MosquesManager = () => {
                     <h1 className="text-3xl font-bold">Gestion des mosquées</h1>
                     <p className="text-slate-500">Gérer les lieux de prière disponibles</p>
                 </div>
-                <button
-                    onClick={() => { setEditingId(null); setFormData({ name: '', address: '', lat: '', lng: '' }); setIsModalOpen(true); }}
-                    className="bg-primaryGreen text-white px-6 py-3 rounded-xl font-bold hover:bg-opacity-90 transition-all flex items-center gap-2"
-                >
-                    <Plus size={20} />
-                    Nouvelle mosquée
-                </button>
+                {userDetails?.role === 'global_admin' && (
+                    <button
+                        onClick={() => { setEditingId(null); setFormData({ name: '', address: '', lat: '', lng: '' }); setIsModalOpen(true); }}
+                        className="bg-primaryGreen text-white px-6 py-3 rounded-xl font-bold hover:bg-opacity-90 transition-all flex items-center gap-2"
+                    >
+                        <Plus size={20} />
+                        Nouvelle mosquée
+                    </button>
+                )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -81,12 +87,16 @@ const MosquesManager = () => {
                                 <MapPin size={24} />
                             </div>
                             <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button onClick={() => startEdit(m)} className="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-400 hover:text-primaryGreen">
-                                    <Edit2 size={18} />
-                                </button>
-                                <button onClick={() => handleDelete(m.id)} className="p-2 hover:bg-red-50 rounded-lg transition-colors text-slate-400 hover:text-red-600">
-                                    <Trash2 size={18} />
-                                </button>
+                                {userDetails?.role === 'global_admin' && (
+                                    <>
+                                        <button onClick={() => startEdit(m)} className="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-400 hover:text-primaryGreen">
+                                            <Edit2 size={18} />
+                                        </button>
+                                        <button onClick={() => handleDelete(m.id)} className="p-2 hover:bg-red-50 rounded-lg transition-colors text-slate-400 hover:text-red-600">
+                                            <Trash2 size={18} />
+                                        </button>
+                                    </>
+                                )}
                             </div>
                         </div>
                         <h3 className="text-xl font-bold mb-1">{m.name}</h3>
